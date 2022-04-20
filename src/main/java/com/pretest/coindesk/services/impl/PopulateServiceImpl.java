@@ -3,6 +3,7 @@ package com.pretest.coindesk.services.impl;
 import com.pretest.coindesk.data.CoinOutputData;
 import com.pretest.coindesk.models.CoinModel;
 import com.pretest.coindesk.services.PopulateService;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,9 @@ public class PopulateServiceImpl implements PopulateService {
     public Map<String, CoinOutputData> populateToCoinMap(final Map<String, CoinModel> map) {
 
         final Map<String, CoinOutputData> result = new HashMap<>();
-        map.forEach((code, coinModel) -> {
-            result.put(code, populateToCoinData(coinModel));
-        });
-
+        if (Objects.nonNull(map)) {
+            map.forEach((code, coinModel) -> result.put(code, populateToCoinData(coinModel)));
+        }
         return result;
     }
 
@@ -43,7 +43,8 @@ public class PopulateServiceImpl implements PopulateService {
 
     @Override
     public String populateToUpdatedTime(final Map<String, String> timeData) {
-        return timeData.getOrDefault(type, timeData.get(DEFAULT_TYPE));
+        return Objects.isNull(timeData) ? Strings.EMPTY :
+                timeData.getOrDefault(type, timeData.get(DEFAULT_TYPE));
     }
 
 }

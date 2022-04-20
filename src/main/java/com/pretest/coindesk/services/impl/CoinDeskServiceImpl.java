@@ -13,7 +13,6 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -44,7 +43,7 @@ public class CoinDeskServiceImpl implements CoinDeskService {
         if (Objects.nonNull(response) && Objects.nonNull(response.getBpi())
                 && response.getBpi().size() > 0) {
             log.info("Start to saving all coin data {} from api calling", response);
-            response.getBpi().forEach((code, coin) -> save(coin));
+            response.getBpi().forEach((code, coin) -> saveOrUpdate(coin));
             return true;
         }
         return false;
@@ -90,13 +89,13 @@ public class CoinDeskServiceImpl implements CoinDeskService {
 
     @Override
     public Optional<CoinModel> get(final String code) {
-        try {
-            log.info("Getting CoinData by code {}", code);
-            return Optional.ofNullable(getCoinRepository().findByCode(code));
-        } catch (EntityNotFoundException e) {
-            log.error("Cannot find the coin with code {}", code, e);
-            return Optional.empty();
-        }
+        log.info("Getting CoinData by code {}", code);
+        return Optional.ofNullable(getCoinRepository().findByCode(code));
+    }
+
+    private Optional<CoinModel> saveOrUpdate(final CoinModel coinModel) {
+        final Optional<CoinModel> saveModel = save(coinModel);
+        return !saveModel.isPresent() ? update(coinModel) : saveModel;
     }
 
     private void updateCoinModel(final CoinModel updated, final CoinModel original) {
