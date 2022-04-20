@@ -85,13 +85,14 @@ public class PopulateServiceImplTest {
     @Test
     public void test_populateToUpdatedTime_with_correct_input() {
 
-        ReflectionTestUtils.setField(populateService, "type", "test");
+        ReflectionTestUtils.setField(populateService, "type", "updateduk");
         HashMap<String, String> timeMap = new HashMap<>();
-        timeMap.put("updated", "defaultTime");
-        Assert.assertEquals("defaultTime", populateService.populateToUpdatedTime(timeMap));
+        timeMap.put("updateduk", "Apr 20, 2022 at 16:53 BST");
+        Assert.assertEquals("2022/04/20 16:53:00", populateService.populateToUpdatedTime(timeMap));
 
-        timeMap.put("test", "12/03");
-        Assert.assertEquals("12/03", populateService.populateToUpdatedTime(timeMap));
+        ReflectionTestUtils.setField(populateService, "type", "updatedISO");
+        timeMap.put("updatedISO", "2022-04-20T15:53:00+00:00");
+        Assert.assertEquals("2022/04/20 15:53:00", populateService.populateToUpdatedTime(timeMap));
     }
 
 }

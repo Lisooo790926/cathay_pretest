@@ -109,25 +109,28 @@
    Response will be the same as https://api.coindesk.com/v1/bpi/currentprice.json
    
 6. Get Simplified response from api - http://localhost:8080/coin/api
+   >If you want to switch different time format, please change 
+    `cathybank.currency.time.type` in `application.properties`. 
+    There are three keys you can change like `updated, updatedISO, updateduk`.
    ```json
    // Response
    {
-       "updatedTime": "Apr 20, 2022 15:04:00 UTC",
+       "updatedTime": "2022/04/20 17:11:00",
        "coins": {
            "EUR": {
                "code": "EUR",
                "name": "歐元",
-               "rate": "38,261.2858"
+               "rate": "38,195.9956"
            },
            "GBP": {
                "code": "GBP",
                "name": "英鎊",
-               "rate": "31,810.3305"
+               "rate": "31,756.0485"
            },
            "USD": {
                "code": "USD",
                "name": "美元",
-               "rate": "41,359.1704"
+               "rate": "41,288.5939"
            }
        }
    }

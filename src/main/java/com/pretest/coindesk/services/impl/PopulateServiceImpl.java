@@ -7,12 +7,25 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.util.*;
 
 @Service
 public class PopulateServiceImpl implements PopulateService {
 
     private static final String DEFAULT_TYPE = "updated";
+    private static final String UK_TYPE = "updateduk";
+
+    private static final Map<String, String> TIME_FORMAT_MAP = new HashMap<>();
+    private static final String STANDARD_FORMAT = "yyyy/MM/dd HH:mm:ss";
+
+    static {
+        TIME_FORMAT_MAP.put(DEFAULT_TYPE, "MMM dd, yyyy HH:mm:ss z");
+        TIME_FORMAT_MAP.put(UK_TYPE, "MMM dd, yyyy 'at' HH:mm z");
+    }
 
     @Value("${cathybank.currency.time.type}")
     private String type;
@@ -43,8 +56,22 @@ public class PopulateServiceImpl implements PopulateService {
 
     @Override
     public String populateToUpdatedTime(final Map<String, String> timeData) {
-        return Objects.isNull(timeData) ? Strings.EMPTY :
-                timeData.getOrDefault(type, timeData.get(DEFAULT_TYPE));
+
+        if (Objects.isNull(timeData)) return Strings.EMPTY;
+
+        final String stringTime = timeData.getOrDefault(type, timeData.get(DEFAULT_TYPE));
+        final Temporal temporal;
+
+        if (Strings.isBlank(type) || DEFAULT_TYPE.equals(type) || UK_TYPE.equals(type)) {
+            final String format = TIME_FORMAT_MAP.getOrDefault(type, timeData.get(DEFAULT_TYPE));
+            final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+            temporal = ZonedDateTime.parse(stringTime, formatter);
+        } else {
+            temporal = OffsetDateTime.parse(stringTime.replace(" ", "T"));
+        }
+
+        final DateTimeFormatter standardFormatter = DateTimeFormatter.ofPattern(STANDARD_FORMAT);
+        return standardFormatter.format(temporal);
     }
 
 }
