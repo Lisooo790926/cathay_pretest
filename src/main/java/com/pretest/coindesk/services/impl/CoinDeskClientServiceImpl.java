@@ -1,5 +1,6 @@
 package com.pretest.coindesk.services.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pretest.coindesk.data.CoinDeskApiResponse;
 import com.pretest.coindesk.services.CoinDeskClientService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 public class CoinDeskClientServiceImpl implements CoinDeskClientService {
 
     private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
 
     @Value("${cathybank.api.url}")
     private String apiUrl;
@@ -22,11 +24,16 @@ public class CoinDeskClientServiceImpl implements CoinDeskClientService {
     public CoinDeskApiResponse fetchCoinDeskByAPI() {
         log.info("Fetching the coin desk by api calling {}", apiUrl);
         try {
-            return getRestTemplate().getForObject(apiUrl, CoinDeskApiResponse.class);
+            final String response = getRestTemplate().getForObject(apiUrl, String.class);
+            return getObjectMapper().readValue(response, CoinDeskApiResponse.class);
         } catch (Exception e) {
             log.error("There is error when fetching the coin desk", e);
             return null;
         }
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 
     public RestTemplate getRestTemplate() {

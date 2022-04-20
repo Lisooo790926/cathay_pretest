@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -49,39 +51,52 @@ public class CoinDeskServiceImpl implements CoinDeskService {
     }
 
     @Override
-    public Optional<CoinModel> save(CoinModel coinModel) {
-        log.info("Save the coinModel {}", Objects.isNull(coinModel)
-                ? Strings.EMPTY : coinModel.getCode());
+    public Optional<CoinModel> save(final CoinModel coinModel) {
+
+        Assert.notNull(coinModel, "Coin should not be null");
+        Assert.notNull(coinModel.getCode(), "Code of the coin should not be null");
+
+        if (get(coinModel.getCode()).isPresent()) {
+            return Optional.empty();
+        }
+
+        log.info("Save the coinModel {}", coinModel.getCode());
         return Optional.of(getCoinRepository().save(coinModel));
     }
 
     @Override
-    public Optional<CoinModel> update(CoinModel coinModel) {
+    public Optional<CoinModel> update(final CoinModel coinModel) {
+
+        Assert.notNull(coinModel, "Coin should not be null");
+        Assert.notNull(coinModel.getCode(), "Code of the coin should not be null");
 
         log.info("Update the coin with code {}", coinModel.getCode());
-        final CoinModel originalCoin = getCoinRepository().getById(coinModel.getCode());
-        if (Objects.nonNull(originalCoin)) {
-            updateCoinModel(coinModel, originalCoin);
-            return Optional.of(getCoinRepository().save(originalCoin));
+        final Optional<CoinModel> oCoin = get(coinModel.getCode());
+        if (oCoin.isPresent()) {
+            updateCoinModel(coinModel, oCoin.get());
+            return Optional.of(getCoinRepository().save(oCoin.get()));
         }
         return Optional.empty();
     }
 
     @Override
-    public boolean remove(String code) {
+    public boolean remove(final String code) {
+
         log.info("Remove the coin with code {}", code);
-        final CoinModel originalCoin = getCoinRepository().getById(code);
-        if (Objects.nonNull(originalCoin)) {
-            getCoinRepository().delete(originalCoin);
-            return true;
-        }
-        return false;
+        Optional<CoinModel> coinModel = get(code);
+        coinModel.ifPresent(coin -> getCoinRepository().delete(coin));
+        return coinModel.isPresent();
     }
 
     @Override
     public Optional<CoinModel> get(final String code) {
-        log.info("Getting CoinData by code {}", code);
-        return Optional.of(getCoinRepository().getById(code));
+        try {
+            log.info("Getting CoinData by code {}", code);
+            return Optional.ofNullable(getCoinRepository().findByCode(code));
+        } catch (EntityNotFoundException e) {
+            log.error("Cannot find the coin with code {}", code, e);
+            return Optional.empty();
+        }
     }
 
     private void updateCoinModel(final CoinModel updated, final CoinModel original) {

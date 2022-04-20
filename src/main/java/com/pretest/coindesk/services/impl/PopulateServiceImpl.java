@@ -13,9 +13,6 @@ public class PopulateServiceImpl implements PopulateService {
 
     private static final String DEFAULT_TYPE = "updated";
 
-    @Value("${cathybank.currency.lang}")
-    private String lang;
-
     @Value("${cathybank.currency.time.type}")
     private String type;
 
@@ -38,7 +35,8 @@ public class PopulateServiceImpl implements PopulateService {
         final CoinOutputData data = new CoinOutputData();
         data.setCode(coinModel.getCode());
         Currency currency = Currency.getInstance(coinModel.getCode());
-        data.setName(currency.getDisplayName(Locale.forLanguageTag(lang)));
+        // Instead of hard code locale, we could use properties or some else way to make it configurable
+        data.setName(currency.getDisplayName(Locale.TAIWAN));
         data.setRate(coinModel.getRate());
         return data;
     }

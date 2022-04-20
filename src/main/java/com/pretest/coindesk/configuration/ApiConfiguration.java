@@ -1,5 +1,6 @@
 package com.pretest.coindesk.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
@@ -13,6 +14,11 @@ public class ApiConfiguration {
     public RestTemplate restTemplate() {
         return new RestTemplate(new BufferingClientHttpRequestFactory(
                 new SimpleClientHttpRequestFactory()));
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
 }
