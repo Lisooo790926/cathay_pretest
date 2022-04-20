@@ -22,8 +22,10 @@
 7. Test whole functionalities in Postman
 
 ## Test Cases
-1. run `mvn test`
-2. check the test result
+1. Run `mvn test`
+2. Check the test result
+3. Make code coverage 100% 
+   ![image](https://user-images.githubusercontent.com/48560984/164266853-54ee0599-34a4-4145-93fb-d420ee64fe44.png)   
 
 ## Test Data and Result
 1. Save api - http://localhost:8080/coin/save
