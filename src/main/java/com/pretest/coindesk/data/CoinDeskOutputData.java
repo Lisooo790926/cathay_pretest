@@ -9,11 +9,8 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoinDeskResponse {
+public class CoinDeskOutputData {
 
-    private CallTimeData time;
-    private String disclaimer;
-    private String chartName;
-    private Map<String, CoinData> bpi;
-
+    private String updatedTime;
+    private Map<String, CoinOutputData> coins;
 }

@@ -1,9 +1,9 @@
 package com.pretest.coindesk.services;
 
-import com.pretest.coindesk.data.CoinDeskResponse;
+import com.pretest.coindesk.data.CoinDeskApiResponse;
 
 public interface CoinDeskClientService {
 
-    CoinDeskResponse fetchCoinDeskByAPI();
+    CoinDeskApiResponse fetchCoinDeskByAPI();
 
 }

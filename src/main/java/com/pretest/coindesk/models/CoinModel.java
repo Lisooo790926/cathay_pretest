@@ -1,4 +1,4 @@
-package com.pretest.coindesk.data;
+package com.pretest.coindesk.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +12,7 @@ import javax.persistence.Id;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CoinData {
+public class CoinModel {
 
     @Id
     @Column(unique = true)

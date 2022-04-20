@@ -1,15 +1,18 @@
 package com.pretest.coindesk.services;
 
-import com.pretest.coindesk.data.CoinData;
-import com.pretest.coindesk.data.CoinDeskResponse;
+import com.pretest.coindesk.data.CoinDeskOutputData;
+import com.pretest.coindesk.data.CoinOutputData;
+import com.pretest.coindesk.models.CoinModel;
+
+import java.util.Optional;
 
 public interface CoinDeskService {
 
-    boolean storeCoinDeskResponse(CoinDeskResponse response);
+    CoinDeskOutputData getCoinDeskResponse();
+    boolean storeCoinDeskResponse();
 
-    CoinData save(CoinData coinData);
-    CoinData update(CoinData coinData);
+    Optional<CoinModel> save(CoinModel coinData);
+    Optional<CoinModel> update(CoinModel coinData);
     boolean remove(String code);
-    CoinData get(String code);
-
+    Optional<CoinModel> get(String code);
 }
