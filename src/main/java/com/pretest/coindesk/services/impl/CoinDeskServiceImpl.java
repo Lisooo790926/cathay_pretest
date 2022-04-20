@@ -26,6 +26,11 @@ public class CoinDeskServiceImpl implements CoinDeskService {
     private final PopulateService populateService;
 
     @Override
+    public CoinDeskApiResponse getWholeCoinDeskResponse() {
+        return getCoinDeskClientService().fetchCoinDeskByAPI();
+    }
+
+    @Override
     public CoinDeskOutputData getCoinDeskResponse() {
         final CoinDeskApiResponse response = getCoinDeskClientService().fetchCoinDeskByAPI();
         final CoinDeskOutputData result = new CoinDeskOutputData();

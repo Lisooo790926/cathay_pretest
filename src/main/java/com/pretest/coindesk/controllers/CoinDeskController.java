@@ -1,5 +1,6 @@
 package com.pretest.coindesk.controllers;
 
+import com.pretest.coindesk.data.CoinDeskApiResponse;
 import com.pretest.coindesk.data.CoinDeskOutputData;
 import com.pretest.coindesk.models.CoinModel;
 import com.pretest.coindesk.services.CoinDeskService;
@@ -20,8 +21,13 @@ public class CoinDeskController {
     @Resource
     private CoinDeskService coinDeskService;
 
+    @GetMapping("/api/all")
+    public CoinDeskApiResponse getApiResponse() {
+        return coinDeskService.getWholeCoinDeskResponse();
+    }
+
     @GetMapping("/api")
-    public CoinDeskOutputData getApiResponse() {
+    public CoinDeskOutputData getApiMinResponse() {
         return coinDeskService.getCoinDeskResponse();
     }
 

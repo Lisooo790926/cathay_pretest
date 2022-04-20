@@ -45,6 +45,12 @@ public class CoinDeskServiceImplTest {
     }
 
     @Test
+    public void test_getWholeCoinDeskResponse() {
+        Mockito.when(coinDeskClientService.fetchCoinDeskByAPI()).thenReturn(response);
+        Assert.assertEquals(response, coinDeskService.getWholeCoinDeskResponse());
+    }
+
+    @Test
     public void test_getCoinDeskResponse_with_clientService_null_response() {
         Mockito.when(coinDeskClientService.fetchCoinDeskByAPI()).thenReturn(null);
         CoinDeskOutputData result = coinDeskService.getCoinDeskResponse();
